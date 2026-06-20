@@ -4,7 +4,7 @@ import cors from "cors"
 const app = express()
 
 // basic configuration
-app.use(express.json)
+app.use(express.json())
 app.use(express.urlencoded({extended: true, limit: "16kb"}))
 app.use(express.static("public"))
 
@@ -16,12 +16,16 @@ app.use(cors({
     allowedHeaders: ["Content-Type","Authorization"]
 }))
 
+
+// import the routes
+
+import healthCheckRouter from "./routes/healthcheck.routes.js"
+
+app.use("/api/v1/healthcheck", healthCheckRouter)
+
 app.get("/", (req, res) => {
     res.send("Welcome to basecampy!")
 })
 
-app.get("/instagram", (req, res) => {
-    res.send("This is instagram page.")
-})
 
 export default app;
