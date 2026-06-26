@@ -33,7 +33,7 @@ const sendEmail = async (options) => {
 
 
     try {
-        await transporter.sendMail(email)
+        await transporter.sendMail(mail)
     } catch (error) {
         console.error("Email service failed silently. Make sure that you have provided your MAILTRAP credentials in the .env file.")
         console.error("Error: ", error)

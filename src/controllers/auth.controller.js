@@ -1,8 +1,8 @@
-import { User, user } from "../models/user.models.js"
+import { User } from "../models/user.models.js"
 import { ApiResponse } from "../utils/api-response.js"
 import { ApiError } from "../utils/api-error.js"
 import { asyncHandler } from "../utils/async-handler.js"
-import {sendEmail} from "../utils/mail.js"
+import {sendEmail, emailVerificationMailgenContent } from "../utils/mail.js"
 
 const generateAccessAndRefreshTokens = async (userId) => {
     try {
@@ -38,8 +38,8 @@ const registerUser = asyncHandler( async (req, res) => {
 
     const user = await User.create({
         email,
-        password,
         username,
+        password,
         isEmailVerified: false
     })
 
@@ -50,7 +50,7 @@ const registerUser = asyncHandler( async (req, res) => {
     user.emailVerificationToken = hashedToken
     user.emailVerificationExpiry = tokenExpiry
 
-    await user.save({ validateBeforeSave })
+    await user.save({ validateBeforeSave: false })
 
 
     await sendEmail(
@@ -70,10 +70,10 @@ const registerUser = asyncHandler( async (req, res) => {
         throw new ApiError(500, "Something went wrong while registering the user")
     }
 
-    return res.status(201).json(new AppiResponse(200, {user: createdUser},
+    return res.status(201).json(new ApiResponse(200, {user: createdUser},
         "User registerd successfully and verification email has been sent on your email."
     ))
 })
 
 
-export { regisgerUser }
+export { registerUser }
